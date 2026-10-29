@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmojiFestas — Gestão de salões de festas</title>
+<meta name="description" content="Agenda, combos e pagamentos dos três salões num lugar só.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@600;800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="logo"><img src="/static/logo.png" alt="EmojiFestas"></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#problema">O problema</a>
+      <a href="#sistema">O sistema</a>
+      <a href="#orcamento">Orçamento</a>
+      <a href="#equipe">Equipe</a>
+      <a href="/login" class="nav-login">Entrar</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menu">Menu</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <p class="kicker">Gestão de salões de festa · 3 unidades</p>
+    <h1>A agenda dos salões cabia numa planilha. <span class="scribble">Até não caber mais.</span></h1>
+    <div class="hero-foot">
+      <p class="lead">O EmojiFestas junta reservas, combos e pagamentos dos três salões num sistema só — feito pra quem atende no balcão e pra quem fecha as contas no escritório.</p>
+      <a href="#orcamento" class="btn">Montar um orçamento</a>
+    </div>
+
+    <figure class="ledger" aria-label="Exemplo da agenda">
+      <figcaption>Agenda · novembro</figcaption>
+      <table>
+        <thead><tr><th>Data</th><th>Salão</th><th>Pacote</th><th>Situação</th></tr></thead>
+        <tbody>
+          <tr><td>sáb 08</td><td>Arco-Íris</td><td>Combo Festa</td><td><span class="tag tag-ok">Quitado</span></td></tr>
+          <tr><td>dom 09</td><td>Estrela</td><td>Personalizado</td><td><span class="tag tag-due">Pendente</span></td></tr>
+          <tr class="conflict"><td>dom 09</td><td>Estrela</td><td>Combo Básico</td><td><span class="tag tag-no">Data ocupada</span></td></tr>
+          <tr><td>sáb 15</td><td>Confete</td><td>Combo Mega</td><td><span class="tag">Sinal pago</span></td></tr>
+        </tbody>
+      </table>
+      <p class="note">↑ o sistema não deixa marcar duas festas no mesmo salão e horário.</p>
+    </figure>
+  </section>
+
+  <section id="problema" class="section wrap split">
+    <h2>Como é hoje</h2>
+    <ol class="problems">
+      <li><strong>Duas festas, um salão.</strong> Sem conferência automática, uma reserva pode atropelar a outra — e quem descobre é o cliente.</li>
+      <li><strong>Cada coisa num arquivo.</strong> Pagamento numa planilha, combo noutra, agenda no caderno. Ninguém tem a visão completa.</li>
+      <li><strong>Orçamento na calculadora.</strong> Montar um pacote com extras leva tempo, e o cliente fica esperando no balcão.</li>
+    </ol>
+  </section>
+
+  <section id="sistema" class="section band">
+    <div class="wrap">
+      <h2>O que o sistema faz</h2>
+      <dl class="features">
+        <div><dt>Login por perfil</dt><dd>A proprietária vê tudo. A atendente vê o que precisa pra trabalhar.</dd></div>
+        <div><dt>Agenda que confere sozinha</dt><dd>Data, horário e salão são checados antes de confirmar qualquer reserva.</dd></div>
+        <div><dt>Combos e extras</dt><dd>Três combos prontos, ou um pacote montado com comida, bebida e brinquedos. Hora extra entra na conta.</dd></div>
+        <div><dt>Ficha do cliente</dt><dd>Nome, contato e documento, ligados a cada festa que a pessoa já fez.</dd></div>
+        <div><dt>Pagamentos</dt><dd>Sinal, parcelas e quitação, com o histórico de cada cliente.</dd></div>
+        <div><dt>Relatórios</dt><dd>Agenda por salão e o financeiro das festas, sem precisar caçar arquivo.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="orcamento" class="section wrap">
+    <h2>Faça um orçamento de teste</h2>
+    <p class="sub">É o mesmo fluxo que a atendente usa no sistema. Valores fictícios.</p>
+    <div class="quote">
+      <form id="simForm" class="quote-form">
+        <fieldset>
+          <legend>1. Salão</legend>
+          <label class="opt"><input type="radio" name="salao" value="0" checked><span>Arco-Íris <em>até 60 pessoas</em></span><b>incluso</b></label>
+          <label class="opt"><input type="radio" name="salao" value="300"><span>Estrela <em>até 100 pessoas</em></span><b>+ R$ 300</b></label>
+          <label class="opt"><input type="radio" name="salao" value="600"><span>Confete <em>até 150 pessoas</em></span><b>+ R$ 600</b></label>
+        </fieldset>
+        <fieldset>
+          <legend>2. Combo</legend>
+          <label class="opt"><input type="radio" name="combo" value="1500" checked><span>Básico</span><b>R$ 1.500</b></label>
+          <label class="opt"><input type="radio" name="combo" value="2500"><span>Festa</span><b>R$ 2.500</b></label>
+          <label class="opt"><input type="radio" name="combo" value="3800"><span>Mega</span><b>R$ 3.800</b></label>
+        </fieldset>
+        <fieldset>
+          <legend>3. Extras</legend>
+          <label class="opt"><input type="checkbox" name="extra" value="350"><span>Salgados</span><b>R$ 350</b></label>
+          <label class="opt"><input type="checkbox" name="extra" value="250"><span>Bebidas</span><b>R$ 250</b></label>
+          <label class="opt"><input type="checkbox" name="extra" value="400"><span>Pula-pula</span><b>R$ 400</b></label>
+          <label class="opt"><input type="checkbox" name="extra" value="300"><span>Bolo</span><b>R$ 300</b></label>
+        </fieldset>
+        <fieldset>
+          <legend>4. Horas a mais <output id="horasOut">nenhuma</output></legend>
+          <input type="range" name="horas" min="0" max="4" value="0" aria-label="Horas adicionais">
+        </fieldset>
+      </form>
+      <aside class="receipt" aria-live="polite">
+        <p class="receipt-head">Resumo</p>
+        <ul id="lines"></ul>
+        <div class="receipt-total"><span>Total</span><strong id="total">R$ 1.500</strong></div>
+        <p id="sinal" class="receipt-sinal"></p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="equipe" class="section wrap split">
+    <h2>Quem fez</h2>
+    <div>
+      <p class="sub left">Trabalho acadêmico de seis pessoas:</p>
+      <ul class="team">
+        <li>Nicolas Addevico</li><li>Eduardo Andina</li><li>Eduardo Tulini</li>
+        <li>Henry Medeiros</li><li>Vitor Amora</li><li>Henrique Vaz</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="footer wrap">
+  <span class="foot-brand"><img src="/static/logo.png" alt="" width="40">EmojiFestas, 2026</span>
+  <a href="#">voltar ao topo ↑</a>
+</footer>
+
+<script src="/static/script.js"></script>
+</body>
+</html>

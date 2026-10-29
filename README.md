@@ -60,3 +60,14 @@ Atualmente, o controle dos 3 salões é feito por planilhas descentralizadas, ge
 * **🔐 Tela de Login e Autenticação:** Acesso restrito via credenciais com redirecionamento baseado na permissão do usuário (*Funcionário* ou *Administrador*).
 * **📅 Tela de Agendamento e Seleção de Combos:** Fluxo guiado em etapas para inserção dos dados do cliente, escolha de data no calendário, seleção de combo base/opcionais e cálculo em tempo real do orçamento.
 * **💳 Tela de Gestão de Pagamentos e Contratos:** Painel financeiro em tabela exibindo o status dos eventos (*Quitado*, *Pago*, *Pendente*) e permitindo registrar a baixa de novos pagamentos.
+
+---
+
+## ▶️ Como rodar
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
+Acesse http://127.0.0.1:5000. Contas de teste: `dona@emojifestas.com` / `admin123` (Proprietária) e `ana@emojifestas.com` / `1234` (Atendente).

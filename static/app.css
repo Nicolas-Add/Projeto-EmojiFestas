@@ -1,0 +1,35 @@
+/* Login */
+.login-page{display:grid;place-items:center;min-height:100vh;background:var(--paper-2)}
+.login{width:min(400px,92%);background:#fff;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--yellow);padding:2rem}
+.login-logo img{width:110px;display:block;margin:-1rem auto 0;transform:scale(1.4)}
+.login h1{font-size:2rem;margin-top:.5rem}
+.login .sub{margin-bottom:1.5rem}
+.login label,.inline-form{display:grid;gap:.3rem;font-weight:500;margin-bottom:1rem}
+input,select{font:inherit;padding:.7rem .8rem;border:1.5px solid var(--line);border-radius:4px;background:#fff;width:100%}
+input:focus,select:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 3px var(--yellow)}
+.login .btn{width:100%;cursor:pointer}
+.error{color:var(--red);font-size:.9rem;min-height:1.3em}
+.demo{margin-top:1.5rem;border-top:1px dashed var(--line);padding-top:1rem;font-size:.88rem;color:var(--soft)}
+.demo button{display:block;width:100%;text-align:left;margin-top:.5rem;padding:.6rem .8rem;background:var(--paper-2);border:1px solid var(--line);border-radius:4px;font:inherit;cursor:pointer;color:var(--ink)}
+.demo button:hover{border-color:var(--ink)}
+.demo b{display:inline-block;min-width:95px}
+
+/* Painel */
+.me{margin-left:auto;display:flex;align-items:center;gap:.8rem;font-size:.95rem}
+.role{background:var(--yellow);padding:.1rem .5rem;font-size:.8rem;font-weight:600;border-radius:3px}
+.link{background:none;border:0;font:inherit;text-decoration:underline;cursor:pointer;color:var(--ink)}
+.app{padding:2.5rem 0 4rem}
+.app h1{font-size:2.4rem;margin-bottom:1.5rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stats div{border:2px solid var(--ink);padding:1rem 1.2rem}
+.stats span{display:block;font-size:.85rem;color:var(--soft)}
+.stats strong{font-family:var(--serif);font-size:1.8rem}
+.panel{margin-bottom:2.5rem;overflow-x:auto}
+.panel h2{font-size:1.5rem}
+.panel h3{margin:1.8rem 0 .8rem;font-size:1.1rem}
+.inline-form{grid-template-columns:1fr 1.3fr 1fr 1fr auto;gap:.6rem}
+.inline-form .btn{cursor:pointer}
+.is-staff .only-admin,.is-admin .only-staff{display:none}
+@media (max-width:720px){.stats,.inline-form{grid-template-columns:1fr}}
+.success{color:var(--green);font-size:.9rem}
+.panel td form{display:inline}

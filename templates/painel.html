@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Painel{% endblock %}
+{% block content %}
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="{{ url_for('index') }}" class="logo"><img src="{{ url_for('static', filename='logo.png') }}" alt="EmojiFestas"></a>
+    <div class="me">{{ me.nome }} <span class="role">{{ me.perfil_nome }}</span>
+      <a class="link" href="{{ url_for('sair') }}">Sair</a></div>
+  </div>
+</header>
+
+<main class="wrap app">
+  <h1>Oi, {{ me.nome.split()[0] }}.</h1>
+
+  {% if me.is_admin %}
+  <section class="stats">
+    <div><span>Festas no mês</span><strong>12</strong></div>
+    <div><span>Recebido</span><strong>R$ 28.400</strong></div>
+    <div><span>A receber</span><strong>R$ 9.150</strong></div>
+  </section>
+  {% endif %}
+
+  <section class="panel">
+    <h2>Próximas festas</h2>
+    <table>
+      <thead><tr><th>Data</th><th>Salão</th><th>Cliente</th><th>Pacote</th><th>Situação</th></tr></thead>
+      <tbody>
+        {% for f in festas %}
+        <tr><td>{{ f.data }}</td><td>{{ f.salao.nome }}</td><td>{{ f.cliente.nome }}</td><td>{{ f.pacote }}</td>
+          <td><span class="tag {{ {'Quitado':'tag-ok','Pendente':'tag-due'}.get(f.situacao, '') }}">{{ f.situacao }}</span></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  {% if me.is_admin %}
+  <section class="panel" id="contas">
+    <h2>Contas da equipe</h2>
+    {% for cat, msg in get_flashed_messages(with_categories=true) %}
+      <p class="{{ 'error' if cat == 'erro' else 'success' }}" role="alert">{{ msg }}</p>
+    {% endfor %}
+    <table>
+      <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th></th></tr></thead>
+      <tbody>
+        {% for u in equipe %}
+        <tr><td>{{ u.nome }}</td><td>{{ u.email }}</td><td>{{ u.perfil_nome }}</td>
+          <td>{% if u.email == me.email %}<em>você</em>{% else %}
+            <form method="post" action="{{ url_for('remover_conta') }}"><input type="hidden" name="email" value="{{ u.email }}"><button class="link">Remover</button></form>
+          {% endif %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Nova conta</h3>
+    <form method="post" action="{{ url_for('criar_conta') }}" class="inline-form">
+      <input name="nome" placeholder="Nome" required>
+      <input name="email" type="email" placeholder="E-mail" required>
+      <input name="senha" placeholder="Senha" required minlength="4">
+      <select name="perfil"><option value="atendente">Atendente</option><option value="admin">Proprietária / Admin</option></select>
+      <button class="btn">Criar</button>
+    </form>
+  </section>
+  {% else %}
+  <p class="note">Seu perfil é de atendente: relatórios financeiros e contas da equipe ficam com a proprietária.</p>
+  {% endif %}
+</main>
+{% endblock %}

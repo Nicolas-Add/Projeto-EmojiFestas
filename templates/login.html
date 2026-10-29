@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Entrar{% endblock %}
+{% block body_class %}login-page{% endblock %}
+{% block content %}
+<main class="login">
+  <a href="{{ url_for('index') }}" class="login-logo"><img src="{{ url_for('static', filename='logo.png') }}" alt="EmojiFestas"></a>
+  <h1>Entrar</h1>
+  <p class="sub">Acesso da equipe dos salões.</p>
+  <form method="post" id="loginForm">
+    <label>E-mail<input type="email" name="email" value="{{ email }}" autocomplete="username" required></label>
+    <label>Senha<input type="password" name="senha" autocomplete="current-password" required></label>
+    <p class="error" role="alert">{{ erro or '' }}</p>
+    <button class="btn">Entrar</button>
+  </form>
+  <div class="demo">
+    <p>Contas de teste — clique para preencher:</p>
+    <button type="button" data-email="dona@emojifestas.com" data-senha="admin123"><b>Proprietária</b> dona@emojifestas.com</button>
+    <button type="button" data-email="ana@emojifestas.com" data-senha="1234"><b>Atendente</b> ana@emojifestas.com</button>
+  </div>
+</main>
+<script>
+  const f = document.getElementById('loginForm');
+  document.querySelectorAll('.demo button').forEach(b => b.onclick = () => {
+    f.email.value = b.dataset.email; f.senha.value = b.dataset.senha; f.querySelector('.btn').focus();
+  });
+</script>
+{% endblock %}
