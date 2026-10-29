@@ -1,0 +1,30 @@
+{% extends "app_base.html" %}
+{% block title %}Equipe{% endblock %}
+{% block main %}
+<h1>Equipe</h1>
+<div class="split-app">
+  <section class="panel">
+    <table>
+      <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th></th></tr></thead>
+      <tbody>
+      {% for u in db.funcionarios %}
+        <tr><td>{{ u.nome }}</td><td>{{ u.email }}</td><td>{{ u.perfil_nome }}</td>
+          <td>{% if u.email == me.email %}<em>você</em>{% else %}
+            <form method="post" onsubmit="return confirm('Remover a conta de {{ u.nome }}?')"><button class="link" name="remover" value="{{ u.email }}">Remover</button></form>
+          {% endif %}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <aside class="receipt">
+    <p class="receipt-head">Nova conta</p>
+    <form method="post" class="stack">
+      <label>Nome<input name="nome" required></label>
+      <label>E-mail<input name="email" type="email" required></label>
+      <label>Senha<input name="senha" required minlength="4"></label>
+      <label>Perfil<select name="perfil"><option value="atendente">Atendente</option><option value="admin">Proprietária / Admin</option></select></label>
+      <button class="btn">Criar conta</button>
+    </form>
+  </aside>
+</div>
+{% endblock %}

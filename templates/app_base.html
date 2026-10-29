@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block body_class %}app-page{% endblock %}
+{% block content %}
+<div class="shell">
+  <aside class="side">
+    <a href="{{ url_for('index') }}" class="side-logo"><img src="{{ url_for('static', filename='logo.png') }}" alt="EmojiFestas"></a>
+    {% set ep = request.endpoint %}
+    <nav>
+      <a href="{{ url_for('painel') }}" class="{{ 'on' if ep == 'painel' }}">Início</a>
+      <a href="{{ url_for('agendar') }}" class="{{ 'on' if ep == 'agendar' }}">Nova festa</a>
+      <a href="{{ url_for('pagamentos') }}" class="{{ 'on' if ep == 'pagamentos' }}">Pagamentos</a>
+      <a href="{{ url_for('clientes') }}" class="{{ 'on' if ep == 'clientes' }}">Clientes</a>
+      <a href="{{ url_for('relatorios') }}" class="{{ 'on' if ep == 'relatorios' }}">Relatórios</a>
+      {% if me.is_admin %}
+      <p class="side-sec">Administração</p>
+      <a href="{{ url_for('saloes') }}" class="{{ 'on' if ep == 'saloes' }}">Salões e combos</a>
+      <a href="{{ url_for('equipe') }}" class="{{ 'on' if ep == 'equipe' }}">Equipe</a>
+      {% endif %}
+    </nav>
+    <div class="side-me">
+      <strong>{{ me.nome }}</strong>
+      <span class="role">{{ me.perfil_nome }}</span>
+      <a class="link" href="{{ url_for('sair') }}">Sair</a>
+    </div>
+  </aside>
+  <main class="app">
+    {% for cat, msg in get_flashed_messages(with_categories=true) %}
+      <p class="flash flash-{{ cat }}" role="alert">{{ msg }}</p>
+    {% endfor %}
+    {% block main %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

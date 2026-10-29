@@ -1,0 +1,41 @@
+{% extends "app_base.html" %}
+{% block title %}Salões e combos{% endblock %}
+{% block main %}
+<h1>Salões e combos</h1>
+<p class="sub">Valores usados no orçamento de novas festas. Festas já marcadas mantêm o valor do contrato.</p>
+
+<form method="post" class="admin-form">
+  <section class="panel">
+    <h2>Salões</h2>
+    <table>
+      <thead><tr><th>Salão</th><th>Capacidade</th><th>Acréscimo (R$)</th></tr></thead>
+      <tbody>{% for s in db.saloes %}
+        <tr><td>{{ s.nome }}</td><td><input type="number" name="cap_{{ s.id }}" value="{{ s.capacidade }}" min="1"></td>
+          <td><input type="number" name="acr_{{ s.id }}" value="{{ '%g' % s.acrescimo }}" min="0" step="0.01"></td></tr>
+      {% endfor %}</tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Combos</h2>
+    <table>
+      <thead><tr><th>Combo</th><th>O que inclui</th><th>Preço (R$)</th></tr></thead>
+      <tbody>{% for c in db.combos %}
+        <tr><td>{{ c.nome }}</td><td><input name="desc_{{ c.id }}" value="{{ c.descricao }}"></td>
+          <td><input type="number" name="combo_{{ c.id }}" value="{{ '%g' % c.preco }}" min="0" step="0.01"></td></tr>
+      {% endfor %}</tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Adicionais</h2>
+    <table>
+      <thead><tr><th>Item</th><th>Preço (R$)</th></tr></thead>
+      <tbody>{% for e in db.extras %}
+        <tr><td>{{ e.nome }}</td><td><input type="number" name="extra_{{ e.id }}" value="{{ '%g' % e.preco }}" min="0" step="0.01"></td></tr>
+      {% endfor %}</tbody>
+    </table>
+  </section>
+  <button class="btn">Salvar alterações</button>
+</form>
+{% endblock %}

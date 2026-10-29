@@ -1,0 +1,66 @@
+{% extends "app_base.html" %}
+{% block title %}Pagamentos{% endblock %}
+{% block main %}
+<div class="head">
+  <h1>Pagamentos e contratos</h1>
+  <form class="filters">
+    <select name="status" onchange="this.form.submit()" aria-label="Filtrar por situação">
+      <option value="">Todas as situações</option>
+      {% for s in ['Pendente', 'Pago', 'Quitado'] %}<option {{ 'selected' if filtro == s }}>{{ s }}</option>{% endfor %}
+    </select>
+  </form>
+</div>
+
+<div class="split-app">
+  <section class="panel">
+    <table class="clickable">
+      <thead><tr><th>Festa</th><th>Cliente</th><th class="num">Total</th><th class="num">Pago</th><th class="num">Saldo</th><th>Situação</th></tr></thead>
+      <tbody>
+      {% for f in festas %}
+        <tr class="{{ 'sel' if aberta and aberta.id == f.id }}" onclick="location='{{ url_for('pagamentos', festa=f.id, status=filtro) }}'">
+          <td>{{ f.data|data }}<br><small>{{ db.salao(f.salao_id).nome }}</small></td>
+          <td>{{ db.cliente(f.cliente_id).nome }}</td>
+          <td class="num">{{ f.total|brl }}</td><td class="num">{{ db.pago(f)|brl }}</td>
+          <td class="num">{{ (f.total - db.pago(f))|brl }}</td>
+          <td>{% include "_status.html" %}</td></tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">Nenhuma festa com essa situação.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <p class="note">Clique numa festa para ver o contrato e dar baixa em pagamentos.</p>
+  </section>
+
+  {% if aberta %}{% set f = aberta %}{% set saldo = f.total - db.pago(f) %}
+  <aside class="receipt contract">
+    <p class="receipt-head">Contrato nº {{ '%04d' % f.id }}</p>
+    {% set ini, fim = f.intervalo() %}
+    <dl class="review">
+      <dt>Cliente</dt><dd>{{ db.cliente(f.cliente_id).nome }}</dd>
+      <dt>Local</dt><dd>Salão {{ db.salao(f.salao_id).nome }}</dd>
+      <dt>Data</dt><dd>{{ f.data|data }}, {{ ini.strftime('%H:%M') }}–{{ fim.strftime('%H:%M') }}</dd>
+      <dt>Pacote</dt><dd>{{ db.combo(f.combo_id).nome if f.combo_id else 'Personalizado' }}{% for e in f.extras %}, {{ db.extra(e).nome }}{% endfor %}{% if f.horas_extra %}, +{{ f.horas_extra }}h{% endif %}</dd>
+      {% if f.obs %}<dt>Obs.</dt><dd>{{ f.obs }}</dd>{% endif %}
+    </dl>
+    <ul id="lines">
+      {% for p in db.pagamentos_da(f.id) %}<li><span>{{ p.tipo }} · {{ p.data[8:] }}/{{ p.data[5:7] }}</span><span>{{ p.valor|brl }}</span></li>
+      {% else %}<li><span>Nenhum pagamento ainda</span></li>{% endfor %}
+    </ul>
+    <div class="receipt-total"><span>Saldo</span><strong>{{ saldo|brl }}</strong></div>
+
+    {% if saldo > 0 %}
+    <form method="post" class="pay-form">
+      <input type="hidden" name="festa_id" value="{{ f.id }}">
+      <label>Valor recebido<input name="valor" inputmode="decimal" required placeholder="0,00"
+        value="{{ ('%.2f' % (f.total * 0.3)).replace('.', ',') if not db.pagamentos_da(f.id) else '' }}"></label>
+      <label>Tipo<select name="tipo"><option>Sinal</option><option selected>Parcela</option></select></label>
+      <button class="btn">Dar baixa</button>
+      <button type="button" class="link" onclick="this.form.valor.value='{{ ('%.2f' % saldo).replace('.', ',') }}'">Preencher saldo total</button>
+    </form>
+    {% else %}
+    <p class="success">Contrato quitado. 🎉</p>
+    {% endif %}
+  </aside>
+  {% endif %}
+</div>
+{% endblock %}

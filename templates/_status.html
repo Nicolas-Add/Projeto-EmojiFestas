@@ -1,0 +1,1 @@
+{% set st = db.status(f) %}<span class="tag {{ {'Quitado':'tag-ok','Pendente':'tag-due'}.get(st, '') }}">{{ st }}</span>

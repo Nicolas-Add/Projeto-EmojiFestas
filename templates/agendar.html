@@ -1,0 +1,92 @@
+{% extends "app_base.html" %}
+{% block title %}Nova festa{% endblock %}
+{% block main %}
+<h1>Nova festa</h1>
+
+<ol class="steps" id="steps">
+  <li class="on">Cliente</li><li>Salão e data</li><li>Pacote</li><li>Revisão</li>
+</ol>
+
+<form method="post" id="wizard" class="wizard">
+  <div class="wiz-body">
+    <!-- 1. Cliente -->
+    <fieldset class="step" data-step="0">
+      <legend>Quem está contratando?</legend>
+      <label>Cliente
+        <select name="cliente_id" id="clienteSel" required>
+          <option value="">Escolha…</option>
+          {% for c in db.clientes %}<option value="{{ c.id }}" {{ 'selected' if form.cliente_id == c.id|string }}>{{ c.nome }} · {{ c.contato }}</option>{% endfor %}
+          <option value="novo" {{ 'selected' if form.cliente_id == 'novo' }}>+ Cadastrar novo cliente</option>
+        </select>
+      </label>
+      <div id="novoCliente" class="grid-2" hidden>
+        <label>Nome completo<input name="novo_nome" value="{{ form.novo_nome }}"></label>
+        <label>Telefone<input name="novo_contato" value="{{ form.novo_contato }}" placeholder="(11) 90000-0000"></label>
+        <label>CPF / documento<input name="novo_documento" value="{{ form.novo_documento }}"></label>
+      </div>
+    </fieldset>
+
+    <!-- 2. Salão e data -->
+    <fieldset class="step" data-step="1" hidden>
+      <legend>Onde e quando?</legend>
+      {% for s in db.saloes %}
+      <label class="opt"><input type="radio" name="salao_id" value="{{ s.id }}" data-preco="{{ s.acrescimo }}" data-nome="Salão {{ s.nome }}" required
+        {{ 'checked' if form.salao_id == s.id|string or (not form.salao_id and loop.first) }}>
+        <span>{{ s.nome }} <em>até {{ s.capacidade }} pessoas</em></span><b>{{ '+ ' ~ s.acrescimo|brl if s.acrescimo else 'sem acréscimo' }}</b></label>
+      {% endfor %}
+      <div class="grid-2">
+        <label>Data<input type="date" name="data" min="{{ hoje }}" value="{{ form.data }}" required></label>
+        <label>Início<input type="time" name="inicio" value="{{ form.inicio or '14:00' }}" step="1800" required></label>
+      </div>
+      <p class="avail" id="avail" aria-live="polite"></p>
+      <label>Horas a mais <small>(a festa já inclui {{ duracao }}h · {{ hora_extra|brl }} por hora extra)</small>
+        <input type="range" name="horas_extra" min="0" max="4" value="{{ form.horas_extra or 0 }}">
+        <output id="horasOut"></output>
+      </label>
+    </fieldset>
+
+    <!-- 3. Pacote -->
+    <fieldset class="step" data-step="2" hidden>
+      <legend>Combo base</legend>
+      {% for c in db.combos %}
+      <label class="opt"><input type="radio" name="combo_id" value="{{ c.id }}" data-preco="{{ c.preco }}" data-nome="Combo {{ c.nome }}"
+        {{ 'checked' if form.combo_id == c.id|string }}><span>{{ c.nome }} <em>{{ c.descricao }}</em></span><b>{{ c.preco|brl }}</b></label>
+      {% endfor %}
+      <label class="opt"><input type="radio" name="combo_id" value="" data-preco="0" {{ 'checked' if not form.combo_id }}>
+        <span>Sem combo <em>montar o pacote só com os itens abaixo</em></span><b>—</b></label>
+      <p class="legend2">Adicionais</p>
+      {% set marcados = form.getlist('extras') if form else [] %}
+      {% for e in db.extras %}
+      <label class="opt"><input type="checkbox" name="extras" value="{{ e.id }}" data-preco="{{ e.preco }}" data-nome="{{ e.nome }}"
+        {{ 'checked' if e.id|string in marcados }}><span>{{ e.nome }}</span><b>{{ e.preco|brl }}</b></label>
+      {% endfor %}
+    </fieldset>
+
+    <!-- 4. Revisão -->
+    <fieldset class="step" data-step="3" hidden>
+      <legend>Confira antes de confirmar</legend>
+      <dl class="review" id="review"></dl>
+      <label>Observações<textarea name="obs" rows="3" placeholder="Tema, nome do aniversariante, restrições…">{{ form.obs }}</textarea></label>
+    </fieldset>
+
+    <p class="error" id="wizErro" role="alert"></p>
+    <div class="wiz-nav">
+      <button type="button" class="link" id="voltar" hidden>← Voltar</button>
+      <button type="button" class="btn" id="avancar">Continuar</button>
+      <button class="btn" id="confirmar" hidden>Confirmar agendamento</button>
+    </div>
+  </div>
+
+  <aside class="receipt" aria-live="polite">
+    <p class="receipt-head">Orçamento</p>
+    <ul id="lines"></ul>
+    <div class="receipt-total"><span>Total</span><strong id="total">R$ 0</strong></div>
+    <p class="receipt-sinal" id="sinal"></p>
+  </aside>
+</form>
+
+<script>
+  const OCUPADOS = {{ ocupados|tojson }}, HORA_EXTRA = {{ hora_extra }};
+</script>
+<script src="{{ url_for('static', filename='agendar.js') }}"></script>
+{% endblock %}

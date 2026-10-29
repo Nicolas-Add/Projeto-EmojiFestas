@@ -1,0 +1,41 @@
+{% extends "app_base.html" %}
+{% block title %}Relatórios{% endblock %}
+{% block main %}
+<div class="head">
+  <h1>Relatórios</h1>
+  <button class="btn btn-out" onclick="print()">Imprimir</button>
+</div>
+
+<section class="panel">
+  <div class="head">
+    <h2>Agenda por salão</h2>
+    <nav class="tabs">
+      <a href="{{ url_for('relatorios') }}" class="{{ 'on' if not salao_id }}">Todos</a>
+      {% for s in db.saloes %}<a href="{{ url_for('relatorios', salao=s.id) }}" class="{{ 'on' if salao_id == s.id }}">{{ s.nome }}</a>{% endfor %}
+    </nav>
+  </div>
+  <table>
+    <thead><tr><th>Data</th><th>Horário</th><th>Salão</th><th>Cliente</th><th class="num">Valor</th><th>Situação</th></tr></thead>
+    <tbody>
+    {% for f in agenda %}{% set ini, fim = f.intervalo() %}
+      <tr><td>{{ f.data|data }}</td><td>{{ ini.strftime('%H:%M') }}–{{ fim.strftime('%H:%M') }}</td><td>{{ db.salao(f.salao_id).nome }}</td>
+        <td>{{ db.cliente(f.cliente_id).nome }}</td><td class="num">{{ f.total|brl }}</td><td>{% include "_status.html" %}</td></tr>
+    {% else %}<tr><td colspan="6" class="empty">Sem festas neste salão.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="panel">
+  <h2>Histórico financeiro</h2>
+  <table>
+    <thead><tr><th>Data</th><th>Cliente</th><th>Festa</th><th>Tipo</th><th class="num">Valor</th></tr></thead>
+    <tbody>
+    {% for p in historico %}{% set f = db.festa(p.festa_id) %}
+      <tr><td>{{ p.data[8:] }}/{{ p.data[5:7] }}/{{ p.data[:4] }}</td><td>{{ db.cliente(f.cliente_id).nome }}</td>
+        <td>{{ f.data|data }} · {{ db.salao(f.salao_id).nome }}</td><td>{{ p.tipo }}</td><td class="num">{{ p.valor|brl }}</td></tr>
+    {% else %}<tr><td colspan="5" class="empty">Nenhum pagamento registrado.</td></tr>{% endfor %}
+    </tbody>
+    <tfoot><tr><td colspan="4">Total recebido</td><td class="num"><strong>{{ historico|sum(attribute='valor')|brl }}</strong></td></tr></tfoot>
+  </table>
+</section>
+{% endblock %}

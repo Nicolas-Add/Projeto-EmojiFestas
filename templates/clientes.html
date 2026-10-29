@@ -1,0 +1,36 @@
+{% extends "app_base.html" %}
+{% block title %}Clientes{% endblock %}
+{% block main %}
+<div class="head">
+  <h1>Clientes</h1>
+  <form class="filters"><input type="search" name="q" value="{{ busca }}" placeholder="Buscar por nome ou documento" aria-label="Buscar"></form>
+</div>
+
+<div class="split-app">
+  <section class="panel">
+    <table>
+      <thead><tr><th>Nome</th><th>Contato</th><th>Documento</th><th>Festas</th><th></th></tr></thead>
+      <tbody>
+      {% for c in clientes %}{% set fs = db.festas|selectattr('cliente_id', 'equalto', c.id)|list %}
+        <tr><td>{{ c.nome }}</td><td>{{ c.contato }}</td><td>{{ c.documento or '—' }}</td><td>{{ fs|length }}</td>
+          <td><a class="link" href="{{ url_for('clientes', editar=c.id) }}">Editar</a></td></tr>
+      {% else %}
+        <tr><td colspan="5" class="empty">Nenhum cliente encontrado.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <aside class="receipt">
+    <p class="receipt-head">{{ 'Editar cliente' if editar else 'Novo cliente' }}</p>
+    <form method="post" class="stack">
+      {% if editar %}<input type="hidden" name="id" value="{{ editar.id }}">{% endif %}
+      <label>Nome completo<input name="nome" value="{{ editar.nome if editar }}" required></label>
+      <label>Telefone<input name="contato" value="{{ editar.contato if editar }}" required></label>
+      <label>CPF / documento<input name="documento" value="{{ editar.documento if editar }}"></label>
+      <button class="btn">Salvar</button>
+      {% if editar %}<a class="link" href="{{ url_for('clientes') }}">Cancelar</a>{% endif %}
+    </form>
+  </aside>
+</div>
+{% endblock %}
